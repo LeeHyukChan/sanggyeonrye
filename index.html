@@ -149,12 +149,17 @@
   .person .pname { font-family: var(--serif); font-size: 24px; font-weight: 700; }
   .quote { font-family: var(--serif); font-size: 17px; }
 
-  /* 이야기 */
-  .timeline { list-style: none; margin: 0 0 28px; padding: 0 0 0 20px; border-left: 1.5px solid var(--accent); display: flex; flex-direction: column; gap: 22px; }
-  .timeline .when { font-family: var(--serif); font-size: 15px; color: var(--accent); }
-  .timeline .what { font-weight: 500; }
-  .timeline .detail { font-size: 15px; color: var(--muted); }
-  .story-photo { height: 220px; border-radius: 6px; }
+  /* 예식 안내 */
+  .venue-photo { aspect-ratio: 3 / 4; margin-bottom: 20px; border-radius: 6px; }
+  .info a { color: var(--ink); }
+  .directions { display: flex; gap: 8px; margin-top: 12px; }
+  .btn {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; min-height: 48px;
+    border: 1px solid var(--line); border-radius: 6px; background: var(--card);
+    color: var(--ink); font: 500 15px var(--sans); text-decoration: none; cursor: pointer;
+  }
+  .btn-kakao { background: #FEE500; border-color: #FEE500; color: #191919; }
+
 
   /* 가족 */
   .family { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
@@ -197,7 +202,7 @@
     <a href="#menu">오늘의 메뉴</a>
     <a href="#today">오늘의 순서</a>
     <a href="#about">저희 소개</a>
-    <a href="#story">우리 이야기</a>
+    <a href="#wedding">예식 안내</a>
     <a href="#family">두 가족</a>
   </nav>
 
@@ -279,17 +284,21 @@
     </div>
   </section>
 
-  <!-- 6. 우리의 이야기 -->
-  <section id="story">
-    <p class="eyebrow">OUR STORY</p>
-    <h2>우리의 이야기</h2>
-    <ol class="timeline">
-      <li><div class="when">[YYYY. MM]</div><div class="what">처음 만난 날</div><div class="detail">[어디서, 어떻게 만났는지]</div></li>
-      <li><div class="when">[YYYY. MM]</div><div class="what">첫 데이트</div><div class="detail">[기억에 남는 장면 한 줄]</div></li>
-      <li><div class="when">[YYYY. MM]</div><div class="what">함께한 특별한 순간</div><div class="detail">[여행, 기념일 등]</div></li>
-      <li><div class="when">[YYYY. MM]</div><div class="what">결혼을 약속한 날</div><div class="detail">[프러포즈 이야기 한 줄]</div></li>
-    </ol>
-    <figure class="photo story-photo" data-label="[함께 찍은 사진]"><img src="images/story.jpg" alt="함께 찍은 사진"></figure>
+  <!-- 6. 예식 안내 -->
+  <section id="wedding">
+    <p class="eyebrow">WEDDING</p>
+    <h2>예식 안내</h2>
+    <figure class="photo venue-photo" data-label="[식장 사진]"><img src="images/venue.jpg" alt="더 뉴 컨벤션 르보느홀"></figure>
+    <dl class="info">
+      <div><dt>일시</dt><dd>2027년 2월 27일 (토) 오후 1시 50분</dd></div>
+      <div><dt>장소</dt><dd>더 뉴 컨벤션 웨딩 르보느홀</dd></div>
+      <div><dt>주소</dt><dd>서울 강서구 공항대로36길 57 (내발산동)</dd></div>
+      <div><dt>문의</dt><dd><a href="tel:16613303">1661-3303</a></dd></div>
+    </dl>
+    <div class="directions">
+      <a class="btn btn-kakao" href="https://map.kakao.com/link/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EC%84%9C%EA%B5%AC%20%EA%B3%B5%ED%95%AD%EB%8C%80%EB%A1%9C36%EA%B8%B8%2057" target="_blank" rel="noopener">카카오맵 길찾기</a>
+      <button type="button" class="btn" id="copy-addr" data-addr="서울특별시 강서구 공항대로36길 57">주소 복사</button>
+    </div>
   </section>
 
   <!-- 7. 두 가족 + 앞으로의 우리 -->
@@ -310,7 +319,7 @@
     </div>
     <h3>앞으로의 우리</h3>
     <div class="plan">
-      <div><span class="label">예식</span><span>[예정 시기]</span></div>
+      <div><span class="label">예식</span><span>2027년 2월 27일 · 더 뉴 컨벤션</span></div>
       <div><span class="label">신혼집</span><span>[지역]</span></div>
       <div><span class="label">꿈</span><span>[함께 하고 싶은 것]</span></div>
     </div>
@@ -331,6 +340,15 @@
     function drop() { img.remove(); }
     if (img.complete && img.naturalWidth === 0) drop();
     img.addEventListener('error', drop);
+  });
+
+  // 주소 복사
+  document.getElementById('copy-addr').addEventListener('click', function () {
+    var btn = this;
+    navigator.clipboard.writeText(btn.dataset.addr).then(function () {
+      btn.textContent = '복사했어요';
+      setTimeout(function () { btn.textContent = '주소 복사'; }, 1500);
+    });
   });
 </script>
 </body>
