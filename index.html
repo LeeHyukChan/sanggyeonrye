@@ -173,9 +173,55 @@
   .closing .line { width: 40px; height: 1px; margin: 0 auto 24px; background: var(--accent); }
   .closing p.serif { font-size: 20px; line-height: 1.8; }
   .closing .sign { margin-top: 20px; font-family: var(--serif); color: var(--muted); }
+
+  /* 입장 애니메이션 */
+  .intro {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper); text-align: center; cursor: pointer;
+    animation: intro-out 0.8s ease 2.6s forwards;
+  }
+  .intro-line { display: block; width: 0; height: 1px; margin: 0 auto; background: var(--accent); animation: line-grow 0.9s ease 0.2s forwards; }
+  .intro-eyebrow { margin: 20px 0 8px; font-size: 13px; letter-spacing: 0.3em; color: var(--accent); opacity: 0; animation: fade-up 0.8s ease 0.6s forwards; }
+  .intro-names { margin: 0 0 20px; font-family: var(--serif); font-size: 30px; font-weight: 700; opacity: 0; animation: fade-up 0.9s ease 1s forwards; }
+  .intro-names em { margin: 0 6px; font-style: normal; font-weight: 400; color: var(--accent); }
+  .cover-frame > * { opacity: 0; animation: fade-up 0.9s ease forwards; }
+  .cover-frame > :nth-child(1) { animation-delay: 2.9s; }
+  .cover-frame > :nth-child(2) { animation-delay: 3.05s; }
+  .cover-frame > :nth-child(3) { animation-delay: 3.2s; }
+  .cover-frame > :nth-child(4) { animation-delay: 3.35s; }
+  .cover-frame > :nth-child(5) { animation-delay: 3.5s; }
+  .cover .photo img { animation: zoom-out 3s ease 2.9s both; }
+  .scroll-hint svg { animation: bob 1.8s ease-in-out 4.4s infinite; }
+  .skip-intro .intro { display: none; }
+  .skip-intro .cover-frame > *, .skip-intro .cover .photo img { animation-delay: 0s; }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @keyframes line-grow { to { width: 120px; } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes intro-out { to { opacity: 0; visibility: hidden; } }
+  @keyframes zoom-out { from { transform: scale(1.08); } to { transform: none; } }
+  @keyframes bob { 50% { transform: translateY(4px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .intro { display: none; }
+    .cover-frame > *, .cover .photo img, .scroll-hint svg { animation: none; opacity: 1; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
 </style>
 </head>
 <body>
+<div class="intro" id="intro" aria-hidden="true">
+  <div>
+    <span class="intro-line"></span>
+    <p class="intro-eyebrow">두 가족의 첫 만남</p>
+    <p class="intro-names">이혁찬<em>&amp;</em>이지우</p>
+    <span class="intro-line"></span>
+  </div>
+</div>
+<script>
+  try { if (sessionStorage.getItem('introSeen')) document.documentElement.classList.add('skip-intro'); sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+  document.getElementById('intro').addEventListener('click', function () { document.documentElement.classList.add('skip-intro'); });
+</script>
 <main>
 
   <!-- 1. 표지 -->
@@ -190,7 +236,7 @@
         <span class="and">그리고</span>
         <span class="name">이지우</span>
       </div>
-      <p class="date">[2026. 00. 00]</p>
+      <p class="date">2026. 10. 24</p>
       <div class="scroll-hint" aria-hidden="true">
         <span>아래로 넘겨 보세요</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -253,12 +299,12 @@
     <ol class="order">
       <li><span class="n">01</span><span>인사와 가족 소개</span></li>
       <li><span class="n">02</span><span>함께하는 식사</span></li>
-      <li><span class="n">03</span><span>저희가 걸어온 이야기</span></li>
+      <li><span class="n">03</span><span>부모님께 드리는 선물</span></li>
       <li><span class="n">04</span><span>디저트와 담소</span></li>
     </ol>
     <dl class="info">
-      <div><dt>일시</dt><dd>[2026년 00월 00일 (토) 낮 12시]</dd></div>
-      <div><dt>장소</dt><dd>설담 [별실 이름]</dd></div>
+      <div><dt>일시</dt><dd>2026년 10월 24일 (토) 저녁 7시</dd></div>
+      <div><dt>장소</dt><dd>설담 마곡점</dd></div>
     </dl>
   </section>
 
@@ -271,7 +317,6 @@
         <figure class="photo" data-label="[사진]"><img src="images/groom.jpg" alt="이혁찬"></figure>
         <div><span class="role">신랑</span><br><span class="pname">이혁찬</span></div>
       </div>
-      <p class="quote">“[신부가 본 신랑, 한 줄 소개]”</p>
       <p class="muted" style="font-size: 15px;">1998년생 · 소프트웨어 개발자</p>
     </div>
     <div class="person">
@@ -279,7 +324,6 @@
         <figure class="photo" data-label="[사진]"><img src="images/bride.jpg" alt="이지우"></figure>
         <div><span class="role">신부</span><br><span class="pname">이지우</span></div>
       </div>
-      <p class="quote">“[신랑이 본 신부, 한 줄 소개]”</p>
       <p class="muted" style="font-size: 15px;">1998년생 · 퍼포먼스 마케터</p>
     </div>
   </section>
@@ -309,19 +353,17 @@
       <div class="family-card">
         <span class="role">신랑 측</span>
         <p>아버지 이주형 · 어머니 김수영</p>
-        <p class="muted" style="font-size: 15px;">[형제 관계 · 함께 오시는 분]</p>
       </div>
       <div class="family-card">
         <span class="role">신부 측</span>
         <p>아버지 이병철 · 어머니 조윤정</p>
-        <p class="muted" style="font-size: 15px;">[형제 관계 · 함께 오시는 분]</p>
       </div>
     </div>
     <h3>앞으로의 우리</h3>
     <div class="plan">
       <div><span class="label">예식</span><span>2027년 2월 27일 · 더 뉴 컨벤션</span></div>
-      <div><span class="label">신혼집</span><span>[지역]</span></div>
-      <div><span class="label">꿈</span><span>[함께 하고 싶은 것]</span></div>
+      <div><span class="label">신혼집</span><span>인천 검단구 근처에서 찾고 있어요 (아직 미정)</span></div>
+      <div><span class="label">꿈</span><span>198살까지 행복하게 함께 살기</span></div>
     </div>
   </section>
 
@@ -341,6 +383,19 @@
     if (img.complete && img.naturalWidth === 0) drop();
     img.addEventListener('error', drop);
   });
+
+  // 스크롤하면 섹션이 부드럽게 나타남
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('main > section').forEach(function (el) {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+  }
 
   // 주소 복사
   document.getElementById('copy-addr').addEventListener('click', function () {
